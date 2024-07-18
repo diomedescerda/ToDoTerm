@@ -11,6 +11,8 @@
 #define RESET "\x1b[0m"
 #define STRIKE_START "\e[9m"
 #define STRIKE_END "\e[29m"
+#define CLEAR_SCREEN "\033[2J"
+#define CURSOR_HOME "\033[H"
 
 typedef struct{
     int index;
@@ -22,11 +24,12 @@ typedef struct{
 Task tasks[10000];
 int taskCount = 0;
 
-void printTodo();
+char* generateToDoString(struct passwd *pw);
 void addTodo(const char* name, const char* color);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
+void updateDisplay(const char* message);
 
 
 int main(int argc, char *argv[]) {
@@ -37,6 +40,7 @@ int main(int argc, char *argv[]) {
 
     uid = getuid();
     pw = getpwuid(uid);
+    char* display; 
 
     if (pw == NULL) {
         perror("getpwuid");
@@ -48,12 +52,10 @@ int main(int argc, char *argv[]) {
     addTodo("study", RED);
     addTodo("clean", GREEN);
     addTodo("run", BLUE);
-    printf("ToDo List in your Terminal!\n");
-    printf("Hey, %s!\n", pw->pw_name);
-    printTodo();
-    printf("(A)dd Todo || (R)emove Todo || Mark (D)one || Mark (U)ndone || (E)xit\n");
-    
+
     do{
+        display = generateToDoString(pw); 
+        updateDisplay(display);
         printf(">>");
         op = getchar();
         while (getchar() != '\n');
@@ -68,7 +70,7 @@ int main(int argc, char *argv[]) {
                 markDone(1);
                 break;
             case 'U':
-                markUndone(3);
+                markUndone(1);
                 break;
             case 'E':
                 printf("Exiting...\n");
@@ -76,22 +78,33 @@ int main(int argc, char *argv[]) {
             default:
                 printf("Invalid option. Please try again.\n");
         }
-        fflush(stdout);
-        printf("\033[1A");
-        printf("\033[K");
     }while(op != 'E');
 
     return 0;
 }
 
-void printTodo() {
+char* generateToDoString(struct passwd *pw) {
+    char* result = NULL;
+    size_t size = 0;
+    FILE* memstream = open_memstream(&result, &size);
+
+    if (memstream == NULL) {
+        fprintf(stderr, "Failed to open memory stream\n");
+        return NULL;
+    }
+
+    fprintf(memstream, "ToDo List in your Terminal!\n");
+    fprintf(memstream, "Hey, %s!\n", pw->pw_name);
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].is_done) {
-            printf(STRIKE_START "%s%d. %s%s\n" STRIKE_END, tasks[i].color,tasks[i].index , tasks[i].name, RESET);
+            fprintf(memstream, STRIKE_START "%s%d. %s%s\n" STRIKE_END, tasks[i].color,tasks[i].index , tasks[i].name, RESET);
         } else {
-            printf("%s%d. %s%s\n", tasks[i].color,tasks[i].index , tasks[i].name, RESET);
+            fprintf(memstream, "%s%d. %s%s\n", tasks[i].color,tasks[i].index , tasks[i].name, RESET);
         }
     }
+    fprintf(memstream, "\n(A)dd Todo || (R)emove Todo || Mark (D)one || Mark (U)ndone || (E)xit");
+    fclose(memstream);
+    return result;
 }
 
 void addTodo(const char* name, const char* color) {
@@ -132,6 +145,7 @@ void markDone(int index) {
             break;
         }
     }
+    printf("It has been mark done.\n");
 }
 
 void markUndone(int index) {
@@ -141,4 +155,12 @@ void markUndone(int index) {
             break;
         }
     }
+    printf("It has been mark undone.\n");
+}
+
+void updateDisplay(const char* display) {
+    printf(CLEAR_SCREEN);
+    printf(CURSOR_HOME);
+    printf("%s\n", display);
+    fflush(stdout);
 }
