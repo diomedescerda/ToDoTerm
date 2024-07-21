@@ -12,7 +12,10 @@
 #define STRIKE_START "\e[9m"
 #define STRIKE_END "\e[29m"
 #define CLEAR_SCREEN "\033[2J"
+#define CLEAR_LINE "\033[2K"
 #define CURSOR_HOME "\033[H"
+#define CURSOR_UP "\033[1F"
+#define CURSOR_RIGHT "\033[3C"
 
 typedef struct{
     int index;
@@ -24,12 +27,12 @@ typedef struct{
 Task tasks[10000];
 int taskCount = 0;
 
-char* generateToDoString(struct passwd *pw);
+char* generateToDoString(struct passwd *pw, char* msg); 
 void addTodo(const char* name, const char* color);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
-void updateDisplay(const char* message);
+void updateDisplay(const char* message, char* msg);
 
 
 int main(int argc, char *argv[]) {
@@ -41,12 +44,14 @@ int main(int argc, char *argv[]) {
     uid = getuid();
     pw = getpwuid(uid);
     char* display; 
+    char msg[100] = "n";
 
     if (pw == NULL) {
         perror("getpwuid");
         exit(EXIT_FAILURE);
     }
     
+    printf("\033[2J");
 
 
     addTodo("study", RED);
@@ -54,37 +59,43 @@ int main(int argc, char *argv[]) {
     addTodo("run", BLUE);
 
     do{
-        display = generateToDoString(pw); 
-        updateDisplay(display);
-        printf(">>");
+        display = generateToDoString(pw, msg); 
+        updateDisplay(display, msg);
         op = getchar();
         while (getchar() != '\n');
         switch (toupper(op)) {
             case 'A':
                 addTodo("run", BLUE);
+                strcpy(msg, "It has been added");
                 break;
             case 'R':
                 removeTodo(2);
+                strcpy(msg, "It has been remove");
                 break;
             case 'D':
                 markDone(1);
+                strcpy(msg, "It has been marked done");
                 break;
             case 'U':
                 markUndone(1);
+                strcpy(msg, "It has been marked undone");
                 break;
             case 'E':
+                printf(CLEAR_LINE);
                 printf("Exiting...\n");
                 return 0;
             default:
-                printf("Invalid option. Please try again.\n");
+                strcpy(msg, "Invalid option. Please try again.");
+                updateDisplay(display, msg);
         }
     }while(op != 'E');
 
     return 0;
 }
 
-char* generateToDoString(struct passwd *pw) {
+char* generateToDoString(struct passwd *pw, char* msg) {
     char* result = NULL;
+    char* info = msg;
     size_t size = 0;
     FILE* memstream = open_memstream(&result, &size);
 
@@ -94,7 +105,7 @@ char* generateToDoString(struct passwd *pw) {
     }
 
     fprintf(memstream, "ToDo List in your Terminal!\n");
-    fprintf(memstream, "Hey, %s!\n", pw->pw_name);
+    fprintf(memstream, "Hey, %s!\n\n", pw->pw_name);
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].is_done) {
             fprintf(memstream, STRIKE_START "%s%d. %s%s\n" STRIKE_END, tasks[i].color,tasks[i].index , tasks[i].name, RESET);
@@ -102,7 +113,12 @@ char* generateToDoString(struct passwd *pw) {
             fprintf(memstream, "%s%d. %s%s\n", tasks[i].color,tasks[i].index , tasks[i].name, RESET);
         }
     }
-    fprintf(memstream, "\n(A)dd Todo || (R)emove Todo || Mark (D)one || Mark (U)ndone || (E)xit");
+    fprintf(memstream, "\n(A)dd Todo || (R)emove Todo || Mark (D)one || Mark (U)ndone || (E)xit\n>> ");
+    
+    if (info[0] != 'n') {
+        fprintf(memstream, "\n%s",info);
+    }
+
     fclose(memstream);
     return result;
 }
@@ -132,10 +148,7 @@ void removeTodo(int index) {
             tasks[i].index--;
         }
         taskCount--;
-        printf("Task %d removed. \n", index);
-    } else {
-        printf("Task with index %d not found. \n", index);
-    }
+    } 
 }
 
 void markDone(int index) {
@@ -145,7 +158,6 @@ void markDone(int index) {
             break;
         }
     }
-    printf("It has been mark done.\n");
 }
 
 void markUndone(int index) {
@@ -155,12 +167,15 @@ void markUndone(int index) {
             break;
         }
     }
-    printf("It has been mark undone.\n");
 }
 
-void updateDisplay(const char* display) {
+void updateDisplay(const char* display, char* msg) {
     printf(CLEAR_SCREEN);
     printf(CURSOR_HOME);
-    printf("%s\n", display);
+    printf("%s", display);
+    if (msg[0] != 'n'){
+        printf(CURSOR_UP);
+        printf(CURSOR_RIGHT);
+    }
     fflush(stdout);
 }
