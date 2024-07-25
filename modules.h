@@ -1,16 +1,18 @@
 #ifndef MODULES_H
 #define MODULES_H
+#include <stdio.h>
 
 typedef struct{
     int index;
-    char name[1000];
+    char name[256];
     const char* color;
     int is_done;
 } Task;
 
-extern Task tasks[10000];
+extern Task *tasks;
 extern int taskCount;
-extern char msg[100];
+extern size_t sizeTasks;
+extern char msg[256];
 extern struct passwd *pw;
 
 #define RED "\x1b[31m"

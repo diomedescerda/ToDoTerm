@@ -4,25 +4,23 @@
 int found = -1;
 
 void addTodo(const char* name, int priority) {
-    if (taskCount < 10000) {
-        tasks[taskCount].index = taskCount + 1;
-        strncpy(tasks[taskCount].name, name, 999);
-        tasks[taskCount].name[999] = '\0';
+    tasks[taskCount].index = taskCount + 1;
+    strncpy(tasks[taskCount].name, name, 256);
+    tasks[taskCount].name[256] = '\0';
 
-        if (priority == 'H'){
-            tasks[taskCount].color = RED;
-        } else if (priority == 'M') {
-            tasks[taskCount].color = YELLOW;
-        } else if (priority == 'L') {
-            tasks[taskCount].color = GREEN;
-        }
-
-       taskCount++;
+    if (priority == 'H'){
+        tasks[taskCount].color = RED;
+    } else if (priority == 'M') {
+        tasks[taskCount].color = YELLOW;
+    } else if (priority == 'L') {
+        tasks[taskCount].color = GREEN;
     }
+    tasks[taskCount].is_done = 0;
+
+    taskCount++;
 }
 
 void removeTodo(int index) {
-    found = -1;
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].index == index) {
             found = i;

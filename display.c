@@ -17,16 +17,24 @@ char* generateToDoString(struct passwd *pw) {
         return NULL;
     }
 
-    fprintf(memstream, "ToDo List in your Terminal!\n");
-    fprintf(memstream, "Hey, %s!\n\n", pw->pw_name);
+    fprintf(memstream, "┌───────────────────────────────────────────────────────────────┐ \n");
+    fprintf(memstream, "│                 ToDo List in your Terminal!                   │ \n");
+    fprintf(memstream, "└───────────────────────────────────────────────────────────────┘ \n");
+    fprintf(memstream, "\n\tHey, ");
+    fprintf(memstream, "%s%s!%s\n\n", PURPLE,  pw->pw_name, RESET);
+
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].is_done) {
-            fprintf(memstream, STRIKE_START "%s%d. %s%s\n" STRIKE_END, tasks[i].color,tasks[i].index , tasks[i].name, RESET);
+            fprintf(memstream, STRIKE_START "\t%s%d. %s%s\n" STRIKE_END, tasks[i].color,tasks[i].index , tasks[i].name, RESET);
         } else {
-            fprintf(memstream, "%s%d. %s%s\n", tasks[i].color,tasks[i].index , tasks[i].name, RESET);
+            fprintf(memstream, "\t%s%d. %s%s\n", tasks[i].color,tasks[i].index , tasks[i].name, RESET);
         }
     }
-    fprintf(memstream, "\n(A)dd Todo || (R)emove Todo || Mark (D)one || Mark (U)ndone || (E)xit\n>> ");
+
+    fprintf(memstream, "\n┌───────────────────────────────────────────────────────────────┐ \n");
+    fprintf(memstream, "│ [ (A)dd Todo ] [ (R)emove Todo ] [ Mark (D)one ] [ (U)ndone ] │ \n");
+    fprintf(memstream, "│ [ (C)lear All ] [ (E)xit ]                                    │ \n");
+    fprintf(memstream, "└───────────────────────────────────────────────────────────────┘ \n\n>> ");
     
     fclose(memstream);
     return result;
@@ -37,14 +45,14 @@ void updateDisplay(const char* display) {
     printf(CURSOR_HOME);
     printf("%s", display);
     printf(SAVE_CURSOR);
-    if (msg[0] != 'n'){
+    if (msg[0] != 'n') {
         printf("\n%s", msg);
     }
     printf(RESTORE_CURSOR);
     fflush(stdout);
 }
 
-void addDisplay(){
+void addDisplay() {
     char name[256];
     int priority;
 
@@ -68,7 +76,7 @@ void addDisplay(){
     }
 }
 
-void removeDisplay(){
+void removeDisplay() {
     int temp = taskCount;
     printf(CLEAR_LINE);
     printf("Enter the ID of the task to remove: ");
@@ -82,7 +90,7 @@ void removeDisplay(){
         strcpy(msg, "Index incorrect");
     }
 }
-void doneDisplay(){
+void doneDisplay() {
     printf("Enter the ID of the task done: ");
     scanf("%d", &id);
     while (getchar() != '\n');
@@ -96,7 +104,7 @@ void doneDisplay(){
     }
 }
 
-void undoneDisplay(){
+void undoneDisplay() {
     printf("Enter the ID of the task undone: ");
     scanf("%d", &id);
     while (getchar() != '\n');

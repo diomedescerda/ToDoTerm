@@ -6,27 +6,33 @@
 #include <string.h>
 #include "modules.h"
 
-Task tasks[10000];
+Task *tasks;
 int taskCount = 0;
-char msg[100] = "n";
+size_t sizeTasks = 1;
+
+char msg[256] = "n";
 struct passwd *pw;
 
 int main(int argc, char *argv[]) {
-    
     uid_t uid;
     int op;
-
     uid = getuid();
     pw = getpwuid(uid);
     char* display; 
-    int id;
+
 
     if (pw == NULL) {
         perror("getpwuid");
         exit(EXIT_FAILURE);
     }
     
-    printf("\033[2J");
+    tasks = calloc(sizeTasks + 1, sizeof(Task));
+    if (tasks == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        return 1;
+    }
+
+    printf(CLEAR_SCREEN);
 
     do{
         display = generateToDoString(pw); 
@@ -35,16 +41,37 @@ int main(int argc, char *argv[]) {
         while (getchar() != '\n');
         switch (toupper(op)) {
             case 'A':
+                sizeTasks++;
+                tasks = realloc(tasks, sizeTasks * sizeof(Task));
+                if (tasks == NULL) {
+                    fprintf(stderr, "Memory reallocation failed\n");
+                    return 1;
+                }
                 addDisplay();
                 break;
             case 'R':
                 removeDisplay();
+                sizeTasks--;
+                tasks = realloc(tasks, sizeTasks * sizeof(Task));
+                if (tasks == NULL) {
+                    fprintf(stderr, "Memory reallocation failed\n");
+                    return 1;
+                }
                 break;
             case 'D':
                 doneDisplay();
                 break;
             case 'U':
                 undoneDisplay();
+                break;
+            case 'C':
+                sizeTasks = 1;
+                taskCount = 0;
+                tasks = realloc(tasks, sizeTasks * sizeof(Task));
+                if (tasks == NULL) {
+                    fprintf(stderr, "Memory reallocation failed\n");
+                    return 1;
+                }
                 break;
             case 'E':
                 printf(CLEAR_LINE);
@@ -56,5 +83,6 @@ int main(int argc, char *argv[]) {
         }
     }while(op != 'E');
 
+    free(tasks);
     return 0;
 }
