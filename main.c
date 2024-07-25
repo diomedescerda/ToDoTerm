@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     uid = getuid();
     pw = getpwuid(uid);
     char* display; 
-
+    int id;
 
     if (pw == NULL) {
         perror("getpwuid");
@@ -35,16 +35,16 @@ int main(int argc, char *argv[]) {
         while (getchar() != '\n');
         switch (toupper(op)) {
             case 'A':
-                addTodo("messi", "messi");
+                addDisplay();
                 break;
             case 'R':
-                removeTodo(2);
+                removeDisplay();
                 break;
             case 'D':
-                markDone(1);
+                doneDisplay();
                 break;
             case 'U':
-                markUndone(1);
+                undoneDisplay();
                 break;
             case 'E':
                 printf(CLEAR_LINE);

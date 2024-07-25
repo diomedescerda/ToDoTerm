@@ -23,12 +23,16 @@ extern struct passwd *pw;
 #define CLEAR_SCREEN "\033[2J"
 #define CLEAR_LINE "\033[2K"
 #define CURSOR_HOME "\033[H"
-#define CURSOR_UP "\033[1F"
-#define CURSOR_RIGHT "\033[3C"
+#define SAVE_CURSOR "\033[s"
+#define RESTORE_CURSOR "\033[u"
 
 char* generateToDoString(struct passwd *pw);
 void updateDisplay(const char* display);
-void addTodo(const char* name, const char* priority);
+void addDisplay();
+void removeDisplay();
+void doneDisplay();
+void undoneDisplay();
+void addTodo(const char* name, int priority);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
