@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
     pw = getpwuid(uid);
     char* display; 
 
-
     if (pw == NULL) {
         perror("getpwuid");
         exit(EXIT_FAILURE);
@@ -65,13 +64,10 @@ int main(int argc, char *argv[]) {
                 undoneDisplay();
                 break;
             case 'C':
-                sizeTasks = 1;
                 taskCount = 0;
-                tasks = realloc(tasks, sizeTasks * sizeof(Task));
-                if (tasks == NULL) {
-                    fprintf(stderr, "Memory reallocation failed\n");
-                    return 1;
-                }
+                break;
+            case 'S':
+                sortByDisplay();
                 break;
             case 'E':
                 printf(CLEAR_LINE);
@@ -84,5 +80,6 @@ int main(int argc, char *argv[]) {
     }while(op != 'E');
 
     free(tasks);
+//    fclose(file);
     return 0;
 }

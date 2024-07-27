@@ -5,7 +5,8 @@
 typedef struct{
     int index;
     char name[256];
-    const char* color;
+    int priority;
+    int time;
     int is_done;
 } Task;
 
@@ -34,9 +35,12 @@ void addDisplay();
 void removeDisplay();
 void doneDisplay();
 void undoneDisplay();
-void addTodo(const char* name, int priority);
+void sortByDisplay();
+void addTodo(const char* name, int priority, int period);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
+void updateIndexByTime ();
+void updateIndexByPriority ();
 
 #endif

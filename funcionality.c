@@ -3,26 +3,24 @@
 
 int found = -1;
 
-void addTodo(const char* name, int priority) {
-    tasks[taskCount].index = taskCount + 1;
-    strncpy(tasks[taskCount].name, name, 256);
-    tasks[taskCount].name[256] = '\0';
+void quickSort();
+void qs (int lo, int hi);
+int partition (int lo, int hi);
 
-    if (priority == 'H'){
-        tasks[taskCount].color = RED;
-    } else if (priority == 'M') {
-        tasks[taskCount].color = YELLOW;
-    } else if (priority == 'L') {
-        tasks[taskCount].color = GREEN;
-    }
+void addTodo(const char* name, int priority, int time) {
+    tasks[taskCount].index = taskCount + 1;
+    strncpy(tasks[taskCount].name, name, 255);
+    tasks[taskCount].name[255] = '\0';
+    tasks[taskCount].priority = priority;
+    tasks[taskCount].time = time;
     tasks[taskCount].is_done = 0;
 
     taskCount++;
 }
 
-void removeTodo(int index) {
+void removeTodo(int id) {
     for (int i = 0; i < taskCount; i++) {
-        if (tasks[i].index == index) {
+        if (tasks[i].index == id) {
             found = i;
             break;
         }
@@ -34,7 +32,7 @@ void removeTodo(int index) {
             tasks[i].index--;
         }
         taskCount--;
-    } 
+    }
 }
 
 void markDone(int id) {
@@ -55,5 +53,69 @@ void markUndone(int id) {
             break;
         }
     }
-    strcpy(msg, "It has been marked undone");
 }
+
+void updateIndexByTime () {
+    int newIndex = 1; 
+    char periods[] = {'M', 'A', 'E', 'N'};
+
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i].time == periods[j]) {
+                tasks[i].index = newIndex++;
+            }
+        }
+    }
+
+   quickSort();
+}
+
+void updateIndexByPriority () {
+    int newIndex = 1; 
+    char priorities[] = {'H', 'M', 'L'};
+
+    for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i].priority == priorities[j]) {
+                tasks[i].index = newIndex++;
+            }
+        }
+    }
+
+    quickSort();
+}
+
+void quickSort () {
+    qs(0, taskCount - 1);
+}
+
+void qs (int lo, int hi) {
+    if (lo >= hi) {
+        return;
+    }
+
+    int pivotIdx = partition(lo, hi);
+    qs(lo, pivotIdx - 1);
+    qs(pivotIdx + 1, hi);
+}
+
+int partition (int lo, int hi) {
+    Task pivot = tasks[hi];
+    int idx = lo - 1;
+
+    for (int i = lo; i < hi; i++) {
+        if (tasks[i].index <= pivot.index) {
+            idx++;
+            Task tmp = tasks[i];
+            tasks[i] = tasks[idx];
+            tasks[idx] = tmp;
+        }
+    }
+
+    idx++;
+    tasks[hi] = tasks[idx];
+    tasks[idx] = pivot;
+
+    return idx;
+}
+
