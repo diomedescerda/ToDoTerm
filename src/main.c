@@ -4,11 +4,10 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string.h>
-#include "modules.h"
+#include "../include/modules.h"
 
 Task *tasks;
 int taskCount = 0;
-size_t sizeTasks = 1;
 
 char msg[256] = "n";
 struct passwd *pw;
@@ -25,10 +24,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     
-    tasks = calloc(sizeTasks + 1, sizeof(Task));
-    if (tasks == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return 1;
+    size_t size;
+    tasks = deserialize_tasks("data/tasks.dat", &size);
+    if (tasks != NULL) {
+        taskCount = size;
+    } else {
+        tasks = calloc(taskCount + 1, sizeof(Task));
+        if (tasks == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return 1;
+        }
     }
 
     printf(CLEAR_SCREEN);
@@ -40,8 +45,7 @@ int main(int argc, char *argv[]) {
         while (getchar() != '\n');
         switch (toupper(op)) {
             case 'A':
-                sizeTasks++;
-                tasks = realloc(tasks, sizeTasks * sizeof(Task));
+                tasks = realloc(tasks, taskCount + 1 * sizeof(Task));
                 if (tasks == NULL) {
                     fprintf(stderr, "Memory reallocation failed\n");
                     return 1;
@@ -50,8 +54,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 'R':
                 removeDisplay();
-                sizeTasks--;
-                tasks = realloc(tasks, sizeTasks * sizeof(Task));
+                tasks = realloc(tasks, taskCount + 1 * sizeof(Task));
                 if (tasks == NULL) {
                     fprintf(stderr, "Memory reallocation failed\n");
                     return 1;
@@ -72,13 +75,12 @@ int main(int argc, char *argv[]) {
             case 'E':
                 printf(CLEAR_LINE);
                 printf("Exiting...\n");
+                serialize_tasks("data/tasks.dat");
+                free(tasks);
                 return 0;
             default:
                 strcpy(msg, "Invalid option. Please try again.");
                 updateDisplay(display);
         }
     }while(op != 'E');
-
-    free(tasks);
-    return 0;
 }

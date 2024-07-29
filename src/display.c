@@ -3,7 +3,7 @@
 #include <pwd.h>
 #include <string.h>
 #include <unistd.h>
-#include "modules.h"
+#include "../include/modules.h"
 
 void tasksByPriority(FILE* memstream, const char* color, int i);
 void tasksByTime(FILE* memstream, const char* color, int i);

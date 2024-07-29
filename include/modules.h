@@ -13,7 +13,6 @@ typedef struct{
 
 extern Task *tasks;
 extern int taskCount;
-extern size_t sizeTasks;
 extern char msg[256];
 extern struct passwd *pw;
 extern int taskMode;
@@ -48,4 +47,6 @@ void updateIndexAsQueue ();
 void updateIndexByTime ();
 void updateIndexByPriority ();
 
+void serialize_tasks(const char *filename);
+Task* deserialize_tasks(const char *filename, size_t *size);
 #endif

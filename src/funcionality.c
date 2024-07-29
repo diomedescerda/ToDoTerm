@@ -1,5 +1,5 @@
 #include <string.h>
-#include "modules.h"
+#include "../include/modules.h"
 
 int found = -1;
 
@@ -130,4 +130,3 @@ int partition (int lo, int hi) {
 
     return idx;
 }
-
