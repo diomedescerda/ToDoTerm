@@ -5,13 +5,20 @@
 #include <unistd.h>
 #include "modules.h"
 
+void tasksByPriority(FILE* memstream, const char* color, int i);
+void tasksByTime(FILE* memstream, const char* color, int i);
+
 int id;
+int hi, me, lo, mo, af, ev, ni;
+int taskMode;
 
 char* generateToDoString(struct passwd *pw) {
     char* result = NULL;
     size_t size = 0;
     FILE* memstream = open_memstream(&result, &size);
     const char* color = "";
+
+    hi = me = lo = mo = af = ev = ni = 0;
 
     if (memstream == NULL) {
         fprintf(stderr, "Failed to open memory stream\n");
@@ -37,11 +44,23 @@ char* generateToDoString(struct passwd *pw) {
                 color = GREEN;
                 break;
         }
+
+        switch (taskMode) {
+            case 'P':
+                tasksByPriority(memstream, color, i);
+                break;
+            case 'T':
+                tasksByTime(memstream, color, i);
+                break;
+            default:
+                break;
         
-        if (tasks[i].is_done) {
-            fprintf(memstream, STRIKE_START "\t%s%d. %s%s\n" STRIKE_END, color, tasks[i].index , tasks[i].name, RESET);
+        }
+
+        if (tasks[i].isDone) {
+            fprintf(memstream, STRIKE_START "\t  %s%d. %s%s\n" STRIKE_END, color, tasks[i].index , tasks[i].name, RESET);
         } else {
-            fprintf(memstream, "\t%s%d. %s%s\n", color, tasks[i].index , tasks[i].name, RESET);
+            fprintf(memstream, "\t  %s%d. %s%s\n", color, tasks[i].index , tasks[i].name, RESET);
         }
     }
 
@@ -52,6 +71,35 @@ char* generateToDoString(struct passwd *pw) {
     
     fclose(memstream);
     return result;
+}
+
+void tasksByPriority(FILE* memstream, const char* color, int i ) {
+    if(tasks[i].priority == 'H' && hi == 0) {
+        fprintf(memstream,"\t%sHIGH%s\n", RED, RESET);
+        hi++;
+    } else if(tasks[i].priority == 'M' && me == 0) {
+        fprintf(memstream,"\t%sMEDIUM%s\n", YELLOW, RESET);
+        me++;
+    } else if(tasks[i].priority == 'L' && lo == 0) {
+        fprintf(memstream,"\t%sLOW%s\n", GREEN, RESET);
+        lo++;
+    }
+}
+
+void tasksByTime(FILE* memstream, const char* color, int i) {
+        if(tasks[i].time == 'M' && mo == 0) {
+            fprintf(memstream,"\t%sMORNING%s\n", PURPLE, RESET);
+            mo++;
+        } else if(tasks[i].time == 'A' && af == 0) {
+            fprintf(memstream,"\t%sAFTERNOON%s\n", PURPLE, RESET);
+            af++;
+        } else if(tasks[i].time == 'E' && ev == 0) {
+            fprintf(memstream,"\t%sEVENING%s\n", PURPLE, RESET);
+            ev++;
+        } else if(tasks[i].time == 'N' && ni == 0) {
+            fprintf(memstream,"\t%sNIGHT%s\n", PURPLE, RESET);
+            ni++;
+        }
 }
 
 void updateDisplay(const char* display) {
@@ -130,7 +178,7 @@ void doneDisplay() {
     
     markDone(id);
 
-    if (tasks[id - 1].is_done == 1) {
+    if (tasks[id - 1].isDone == 1) {
         strcpy(msg, "It has been marked done");
     } else {
         strcpy(msg, "It seem has been an error.");
@@ -146,26 +194,48 @@ void undoneDisplay() {
     strcpy(msg, "It has been marked undone");
 }
 
+void clearDisplay() {
+    int op = 0;
+    printf("Are you sure you want to clear all (Y/N): ");
+    op = getchar();
+    while (getchar() != '\n');
+
+    if (toupper(op) == 'Y') {
+        taskCount = 0;
+        strcpy(msg, "It has been cleared");
+    } else {
+        strcpy(msg, "It hasn't been cleared");
+    }
+}
+
 void sortByDisplay() {
     int criteria;
 
     printf(CLEAR_LINE);
     printf("Specify the sorting criteria: ");
     printf(SAVE_CURSOR);
-    printf("\n[P]riority [T]ime period of the day");
+    printf("\n[Q]ueue [P]riority [T]ime period of the day");
     printf(RESTORE_CURSOR);
 
     criteria = getchar();
     while (getchar() != '\n');
     criteria = toupper(criteria);
 
-    if (criteria == 'P') {
-        updateIndexByPriority();
-        strcpy(msg, "It has been sorted by priority");
-    } else if (criteria == 'T') {
-        updateIndexByTime();
-        strcpy(msg, "It has been sorted by time period of the day");
-    } else {
-        strcpy(msg, "It seems it was an error with the sorting criteria");
+    switch (criteria) {
+        case 'Q':
+            updateIndexAsQueue();
+            strcpy(msg, "It has been sorted as a Queue");
+            break;
+        case 'P':
+            updateIndexByPriority();
+            strcpy(msg, "It has been sorted by priority");
+            break;
+        case 'T':
+            updateIndexByTime();
+            strcpy(msg, "It has been sorted by time period of the day");
+            break;
+        default:
+            strcpy(msg, "It seems it was an error with the sorting criteria");
+            break;
     }
 }

@@ -9,11 +9,12 @@ int partition (int lo, int hi);
 
 void addTodo(const char* name, int priority, int time) {
     tasks[taskCount].index = taskCount + 1;
+    tasks[taskCount].ogIndex = taskCount + 1;
     strncpy(tasks[taskCount].name, name, 255);
     tasks[taskCount].name[255] = '\0';
     tasks[taskCount].priority = priority;
     tasks[taskCount].time = time;
-    tasks[taskCount].is_done = 0;
+    tasks[taskCount].isDone = 0;
 
     taskCount++;
 }
@@ -39,7 +40,7 @@ void markDone(int id) {
     found = -1;
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].index == id) {
-            tasks[i].is_done = 1;
+            tasks[i].isDone = 1;
             break;
         }
     }
@@ -49,10 +50,19 @@ void markUndone(int id) {
     found = -1;
     for (int i = 0; i < taskCount; i++) {
         if (tasks[i].index == id) {
-            tasks[i].is_done = 0;
+            tasks[i].isDone = 0;
             break;
         }
     }
+}
+
+void updateIndexAsQueue() {
+    for (int i = 0; i < taskCount; i++) {
+        tasks[i].index = tasks[i].ogIndex;
+    }
+
+    taskMode = 'Q';
+    quickSort();
 }
 
 void updateIndexByTime () {
@@ -67,6 +77,7 @@ void updateIndexByTime () {
         }
     }
 
+   taskMode = 'T';
    quickSort();
 }
 
@@ -82,6 +93,7 @@ void updateIndexByPriority () {
         }
     }
 
+    taskMode = 'P';
     quickSort();
 }
 

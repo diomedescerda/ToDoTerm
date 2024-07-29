@@ -4,10 +4,11 @@
 
 typedef struct{
     int index;
+    int ogIndex;
     char name[256];
     int priority;
     int time;
-    int is_done;
+    int isDone;
 } Task;
 
 extern Task *tasks;
@@ -15,6 +16,7 @@ extern int taskCount;
 extern size_t sizeTasks;
 extern char msg[256];
 extern struct passwd *pw;
+extern int taskMode;
 
 #define RED "\x1b[31m"
 #define YELLOW "\x1b[33m"
@@ -35,11 +37,14 @@ void addDisplay();
 void removeDisplay();
 void doneDisplay();
 void undoneDisplay();
+void clearDisplay();
 void sortByDisplay();
+
 void addTodo(const char* name, int priority, int period);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
+void updateIndexAsQueue ();
 void updateIndexByTime ();
 void updateIndexByPriority ();
 

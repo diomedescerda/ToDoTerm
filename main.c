@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
                 undoneDisplay();
                 break;
             case 'C':
-                taskCount = 0;
+                clearDisplay();
                 break;
             case 'S':
                 sortByDisplay();
@@ -80,6 +80,5 @@ int main(int argc, char *argv[]) {
     }while(op != 'E');
 
     free(tasks);
-//    fclose(file);
     return 0;
 }
