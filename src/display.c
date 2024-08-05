@@ -196,6 +196,7 @@ void undoneDisplay() {
 
 void clearDisplay() {
     int op = 0;
+    printf(CLEAR_LINE);
     printf("Are you sure you want to clear all (Y/N): ");
     op = getchar();
     while (getchar() != '\n');
