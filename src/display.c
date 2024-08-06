@@ -172,6 +172,7 @@ void removeDisplay() {
     }
 }
 void doneDisplay() {
+    printf(CLEAR_LINE);
     printf("Enter the ID of the task done: ");
     scanf("%d", &id);
     while (getchar() != '\n');
@@ -186,6 +187,7 @@ void doneDisplay() {
 }
 
 void undoneDisplay() {
+    printf(CLEAR_LINE);
     printf("Enter the ID of the task undone: ");
     scanf("%d", &id);
     while (getchar() != '\n');
