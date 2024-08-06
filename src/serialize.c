@@ -41,7 +41,7 @@ void serialize_tasks(const char *filename) {
     }
 
     for (int i = 0; i < taskCount; ++i) {
-        fprintf(file, "%d %d %s %d %d %d\n", tasks[i].index, tasks[i].ogIndex, tasks[i].name, tasks[i].priority, tasks[i].time, tasks[i].isDone);
+        fprintf(file, "%d|%d|%s|%d|%d|%d\n", tasks[i].index, tasks[i].ogIndex, tasks[i].name, tasks[i].priority, tasks[i].time, tasks[i].isDone);
     }
 
     fclose(file);
@@ -67,10 +67,30 @@ Task* deserialize_tasks(const char *filename, size_t *size) {
     }
 
     Task *tasks = NULL;
-    Task task;
     *size = 0;
 
-    while (fscanf(file, "%d %d %255s %d %d %d\n", &task.index, &task.ogIndex, task.name, &task.priority, &task.time, &task.isDone) == 6) {
+    char line[256];
+
+    while (fgets(line, sizeof(line), file)) {
+        Task task;
+        char *token = strtok(line, "|");
+        if (token) task.index = atoi(token);
+
+        token = strtok(NULL, "|");
+        if (token) task.ogIndex = atoi(token);
+
+        token = strtok(NULL, "|");
+        if (token) strncpy(task.name, token, 256);
+
+        token = strtok(NULL, "|");
+        if (token) task.priority = atoi(token);
+
+        token = strtok(NULL, "|");
+        if (token) task.time = atoi(token);
+
+        token = strtok(NULL, "|");
+        if (token) task.isDone = atoi(token);
+
         tasks = realloc(tasks, (*size + 1) * sizeof(Task));
         if (!tasks) {
             perror("Failed to allocate memory");

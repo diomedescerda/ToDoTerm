@@ -74,8 +74,8 @@ int main(int argc, char *argv[]) {
                 break;
             case 'E':
                 printf(CLEAR_LINE);
-                printf("Exiting...\n");
                 serialize_tasks("~/.config/ToDoTerm/tasks.dat");
+                printf("Exiting...\n");
                 free(tasks);
                 return 0;
             default:

@@ -64,10 +64,10 @@ char* generateToDoString(struct passwd *pw) {
         }
     }
 
-    fprintf(memstream, "\n┌───────────────────────────────────────────────────────────────┐ \n");
-    fprintf(memstream, "│ [ (A)dd Todo ] [ (R)emove Todo ] [ Mark (D)one ] [ (U)ndone ] │ \n");
-    fprintf(memstream, "│ [ [S]ort By ] [ (C)lear All ] [ (E)xit ]                      │ \n");
-    fprintf(memstream, "└───────────────────────────────────────────────────────────────┘ \n\n>> ");
+    fprintf(memstream, "\n┌────────────────────────────────────────────────────────────────────┐ \n");
+    fprintf(memstream, "│ [ (A)dd Todo ] [ (R)emove Todo ] [ Mark (D)one ] [ Mark (U)ndone ] │ \n");
+    fprintf(memstream, "│ [ [S]ort By ] [ (C)lear All ] [ (E)xit ]                           │ \n");
+    fprintf(memstream, "└────────────────────────────────────────────────────────────────────┘ \n\n>> ");
     
     fclose(memstream);
     return result;
