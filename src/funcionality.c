@@ -56,6 +56,12 @@ void markUndone(int id) {
     }
 }
 
+void markUndoneAll() {
+    for (int i = 0; i < taskCount; i++) {
+            tasks[i].isDone = 0;
+    }
+}
+
 void updateIndexAsQueue() {
     for (int i = 0; i < taskCount; i++) {
         tasks[i].index = tasks[i].ogIndex;

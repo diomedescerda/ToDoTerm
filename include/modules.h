@@ -43,6 +43,7 @@ void addTodo(const char* name, int priority, int period);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
+void markUndoneAll();
 void updateIndexAsQueue ();
 void updateIndexByTime ();
 void updateIndexByPriority ();

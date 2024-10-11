@@ -187,13 +187,23 @@ void doneDisplay() {
 }
 
 void undoneDisplay() {
+    int op;
     printf(CLEAR_LINE);
-    printf("Enter the ID of the task undone: ");
-    scanf("%d", &id);
+    printf("1. Undone all 2. Just one : ");
+    op = getchar();
     while (getchar() != '\n');
-    
-    markUndone(id);
-    strcpy(msg, "It has been marked undone");
+    if (op == '1') {
+        markUndoneAll();
+        strcpy(msg, "It has been marked undone");
+    } else if (op == '2'){
+        printf("Enter the ID of the task undone: ");
+        scanf("%d", &id);
+        while (getchar() != '\n');
+        markUndone(id);
+        strcpy(msg, "It has been marked undone");
+    } else {
+        strcpy(msg, "That wasn't an option");
+    }
 }
 
 void clearDisplay() {
