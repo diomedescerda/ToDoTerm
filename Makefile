@@ -7,7 +7,7 @@ SRCDIR = src
 
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-TARGET = $(BINDIR)/ToDoTerm
+	TARGET = $(BINDIR)/ToDoTerm
 
 .PHONY: all clean
 

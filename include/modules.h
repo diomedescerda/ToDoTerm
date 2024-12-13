@@ -2,13 +2,13 @@
 #define MODULES_H
 #include <stdio.h>
 
-typedef struct{
-    int index;
-    int ogIndex;
-    char name[256];
-    int priority;
-    int time;
-    int isDone;
+typedef struct {
+  int index;
+  int ogIndex;
+  char name[256];
+  int priority;
+  int time;
+  int isDone;
 } Task;
 
 extern Task *tasks;
@@ -30,8 +30,8 @@ extern int taskMode;
 #define SAVE_CURSOR "\033[s"
 #define RESTORE_CURSOR "\033[u"
 
-char* generateToDoString(struct passwd *pw);
-void updateDisplay(const char* display);
+char *generateToDoString(struct passwd *pw);
+void updateDisplay(const char *display);
 void addDisplay();
 void removeDisplay();
 void doneDisplay();
@@ -39,15 +39,15 @@ void undoneDisplay();
 void clearDisplay();
 void sortByDisplay();
 
-void addTodo(const char* name, int priority, int period);
+void addTodo(const char *name, int priority, int period);
 void removeTodo(int index);
 void markDone(int index);
 void markUndone(int index);
 void markUndoneAll();
-void updateIndexAsQueue ();
-void updateIndexByTime ();
-void updateIndexByPriority ();
+void updateIndexAsQueue();
+void updateIndexByTime();
+void updateIndexByPriority();
 
 void serialize_tasks(const char *filename);
-Task* deserialize_tasks(const char *filename, size_t *size);
+Task *deserialize_tasks(const char *filename, size_t *size);
 #endif
