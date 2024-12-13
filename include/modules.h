@@ -50,4 +50,6 @@ void updateIndexByPriority();
 
 void serialize_tasks(const char *filename);
 Task *deserialize_tasks(const char *filename, size_t *size);
+
+void printDay();
 #endif

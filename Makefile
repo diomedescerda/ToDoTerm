@@ -4,8 +4,9 @@ CFLAGS = -Wall -I./include
 OBJDIR = src/obj
 BINDIR = bin
 SRCDIR = src
+MODDIR = src/modules
 
-SRCS = $(wildcard $(SRCDIR)/*.c)
+SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MODDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 	TARGET = $(BINDIR)/ToDoTerm
 
