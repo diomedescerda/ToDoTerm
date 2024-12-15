@@ -53,5 +53,5 @@ Task *deserialize_tasks(const char *filename, size_t *size);
 
 void printDay();
 void addSubject(const char *name, int day);
-void addExample();
+void removeSubject(const char *name);
 #endif

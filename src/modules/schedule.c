@@ -49,3 +49,16 @@ void addSubject(const char *name, int day) {
   strcpy(days[day].subjects[n], name);
   days[day].nSubjects++;
 }
+
+void removeSubject(const char *name) {
+  for (int i = 0; i < NUM_DAYS; i++) {
+    for (int j = 0; j < days[i].nSubjects; j++) {
+      if (strcmp(name, days[i].subjects[j]) == 0) {
+        for (int k = j; k < days[i].nSubjects; k++) {
+          days[i].subjects[k] = days[i].subjects[k + 1];
+        }
+        days[i].nSubjects--;
+      }
+    }
+  }
+}

@@ -89,6 +89,9 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "schedule") == 0) {
       addSubject("Japanese", 5);
+      addSubject("Math", 5);
+      addSubject("Biology", 5);
+      removeSubject("Japanese");
       printDay();
     } else if (strcmp(argv[1], "deadline") == 0) {
       printf("deadline");
