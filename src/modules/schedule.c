@@ -1,4 +1,5 @@
 #include "../../include/modules.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,11 +44,32 @@ void printDay() {
   }
 }
 
-void addSubject(const char *name, int day) {
-  int n = days[day].nSubjects;
-  days[day].subjects[n] = (char *)malloc((strlen("Math") + 1) * sizeof(char));
-  strcpy(days[day].subjects[n], name);
-  days[day].nSubjects++;
+void addSubject() {
+  char name[256];
+  printf("Insert the name of the subject\n > ");
+  fgets(name, 256, stdin);
+  name[strlen(name) - 1] = 0;
+
+  char input[256];
+  printf("Which days does it take place? (e.g., 1 3 4)\n");
+  printf("[0] Sunday [1] Monday [2] Tuesday [3] Wednesday [4] Thursday [5] "
+         "Friday [6] Saturday\n > ");
+  fgets(input, 256, stdin);
+  input[strlen(input) - 1] = 0;
+
+  int nDays = 0;
+  int day;
+  int n;
+  for (int i = 0; i < strlen(input); i++) {
+    if (isdigit(input[i])) {
+      day = input[i] - '0';
+      n = days[day].nSubjects;
+      days[day].subjects[n] = (char *)malloc((strlen(name) + 1) * sizeof(char));
+      strcpy(days[day].subjects[n], name);
+      days[day].nSubjects++;
+      nDays++;
+    }
+  }
 }
 
 void removeSubject(const char *name) {
