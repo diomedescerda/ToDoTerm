@@ -63,8 +63,9 @@ void updateIndexByPriority();
 void serializeTasks(const char *filename);
 void serializeSchedule(const char *filename);
 Task *deserializeTasks(const char *filename, size_t *size);
+Day *deserializeSchedule(const char *filename, size_t *size);
 
-void printSchedule();
+void printSchedule(Day *schedule);
 void addSubject();
 void removeSubject();
 #endif

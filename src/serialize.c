@@ -157,3 +157,59 @@ Task *deserializeTasks(const char *filename, size_t *size) {
   fclose(file);
   return tasks;
 }
+
+Day *deserializeSchedule(const char *filename, size_t *size) {
+  char filePath[256];
+  if (filename[0] == '~') {
+    const char *homeDir = getenv("HOME");
+    if (homeDir == NULL) {
+      perror("Failed to get home directory");
+      return NULL;
+    }
+    snprintf(filePath, sizeof(filePath), "%s%s", homeDir, filename + 1);
+  } else {
+    strncpy(filePath, filename, sizeof(filePath));
+  }
+
+  FILE *file = fopen(filePath, "r");
+  if (!file) {
+    perror("Failed to open file for reading");
+    return NULL;
+  }
+
+  Day *days = NULL;
+  *size = 0;
+
+  char line[256];
+
+  while (fgets(line, sizeof(line), file)) {
+    Day day;
+    char *token = strtok(line, "|");
+    if (token)
+      strncpy(day.dayName, token, 9);
+
+    token = strtok(NULL, "|");
+    if (token)
+      day.nSubjects = atoi(token);
+
+    for (int i = 0; i < day.nSubjects; i++) {
+      token = strtok(NULL, "|");
+      if (token) {
+        day.subjects[i] = malloc(strlen(token) + 1);
+        strncpy(day.subjects[i], token, 14);
+      }
+    }
+
+    days = realloc(days, (*size + 1) * sizeof(Day));
+    if (!days) {
+      perror("Failed to allocate memory");
+      fclose(file);
+      return NULL;
+    }
+    days[*size] = day;
+    (*size)++;
+  }
+
+  fclose(file);
+  return days;
+}

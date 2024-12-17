@@ -15,16 +15,16 @@ Day days[NUM_DAYS] = {
     [6] = {.dayName = "Saturday", .nSubjects = 0},
 };
 
-void printSchedule() {
+void printSchedule(Day *schedule) {
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
   int d = tm.tm_wday;
   int end = NUM_DAYS;
 
   for (int i = d; i < end; i++) {
-    printf("%s\n", days[i].dayName);
-    for (int j = 0; j < days[i].nSubjects; j++) {
-      printf("  - %s\n", days[i].subjects[j]);
+    printf("%s\n", schedule[i].dayName);
+    for (int j = 0; j < schedule[i].nSubjects; j++) {
+      printf("  - %s\n", schedule[i].subjects[j]);
     }
 
     if (i == NUM_DAYS - 1 && d != 0) {
