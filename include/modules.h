@@ -2,6 +2,10 @@
 #define MODULES_H
 #include <stdio.h>
 
+#define NUM_DAYS 7
+#define MAX_SUBJECTS 12
+#define MAX_SUBJECT_LENGTH 30
+
 typedef struct {
   int index;
   int ogIndex;
@@ -11,11 +15,19 @@ typedef struct {
   int isDone;
 } Task;
 
+typedef struct {
+  char dayName[10];
+  char *subjects[15];
+  int nSubjects;
+} Day;
+
 extern Task *tasks;
 extern int taskCount;
 extern char msg[256];
 extern struct passwd *pw;
 extern int taskMode;
+
+extern Day days[NUM_DAYS];
 
 #define RED "\x1b[31m"
 #define YELLOW "\x1b[33m"
@@ -48,10 +60,11 @@ void updateIndexAsQueue();
 void updateIndexByTime();
 void updateIndexByPriority();
 
-void serialize_tasks(const char *filename);
-Task *deserialize_tasks(const char *filename, size_t *size);
+void serializeTasks(const char *filename);
+void serializeSchedule(const char *filename);
+Task *deserializeTasks(const char *filename, size_t *size);
 
-void printDay();
+void printSchedule();
 void addSubject();
-void removeSubject(const char *name);
+void removeSubject();
 #endif

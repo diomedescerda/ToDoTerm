@@ -5,16 +5,6 @@
 #include <string.h>
 #include <time.h>
 
-#define NUM_DAYS 7
-#define MAX_SUBJECTS 12
-#define MAX_SUBJECT_LENGTH 30
-
-typedef struct {
-  char dayName[10];
-  char *subjects[15];
-  int nSubjects;
-} Day;
-
 Day days[NUM_DAYS] = {
     [0] = {.dayName = "Sunday", .nSubjects = 0},
     [1] = {.dayName = "Monday", .nSubjects = 0},
@@ -25,7 +15,7 @@ Day days[NUM_DAYS] = {
     [6] = {.dayName = "Saturday", .nSubjects = 0},
 };
 
-void printDay() {
+void printSchedule() {
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
   int d = tm.tm_wday;
@@ -72,7 +62,12 @@ void addSubject() {
   }
 }
 
-void removeSubject(const char *name) {
+void removeSubject() {
+  char name[256];
+  printf("Insert the name of the subject\n > ");
+  fgets(name, 256, stdin);
+  name[strlen(name) - 1] = 0;
+
   for (int i = 0; i < NUM_DAYS; i++) {
     for (int j = 0; j < days[i].nSubjects; j++) {
       if (strcmp(name, days[i].subjects[j]) == 0) {

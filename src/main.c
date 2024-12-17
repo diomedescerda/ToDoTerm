@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     }
 
     size_t size;
-    tasks = deserialize_tasks("~/.config/ToDoTerm/tasks.dat", &size);
+    tasks = deserializeTasks("~/.config/ToDoTerm/tasks.dat", &size);
     if (tasks != NULL) {
       taskCount = size;
     } else {
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         break;
       case 'E':
         printf(CLEAR_LINE);
-        serialize_tasks("~/.config/ToDoTerm/tasks.dat");
+        serializeTasks("~/.config/ToDoTerm/tasks.dat");
         printf("Exiting...\n");
         free(tasks);
         return 0;
@@ -88,10 +88,11 @@ int main(int argc, char *argv[]) {
   } else if (argc == 2) {
 
     if (strcmp(argv[1], "schedule") == 0) {
-      int daysArray[] = {1, 2, 3};
+      printSchedule();
       addSubject();
-      // removeSubject("Japanese");
-      printDay();
+      addSubject();
+      serializeSchedule("~/.config/ToDoTerm/schedule.dat");
+      // removeSubject();
     } else if (strcmp(argv[1], "deadline") == 0) {
       printf("deadline");
     } else {

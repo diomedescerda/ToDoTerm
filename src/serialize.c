@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-void serialize_tasks(const char *filename) {
+void serializeTasks(const char *filename) {
   char filePath[256];
 
   if (filename[0] == '~') {
@@ -48,7 +48,53 @@ void serialize_tasks(const char *filename) {
   fclose(file);
 }
 
-Task *deserialize_tasks(const char *filename, size_t *size) {
+void serializeSchedule(const char *filename) {
+  char filePath[256];
+
+  if (filename[0] == '~') {
+    const char *homeDir = getenv("HOME");
+    if (homeDir == NULL) {
+      perror("Failed to get home directory");
+      return;
+    }
+    snprintf(filePath, sizeof(filePath), "%s%s", homeDir, filename + 1);
+  } else {
+    strncpy(filePath, filename, sizeof(filePath));
+  }
+
+  char dirPath[256];
+  strncpy(dirPath, filePath, sizeof(dirPath));
+  char *lastSlash = strrchr(dirPath, '/');
+  if (lastSlash != NULL) {
+    *lastSlash = '\0';
+
+    struct stat st = {0};
+    if (stat(dirPath, &st) == -1) {
+      if (mkdir(dirPath, 0700) == -1) {
+        perror("Failed to create directory");
+        return;
+      }
+    }
+  }
+
+  FILE *file = fopen(filePath, "w");
+  if (!file) {
+    perror("Failed to open file for writing");
+    return;
+  }
+
+  for (int i = 0; i < NUM_DAYS; ++i) {
+    fprintf(file, "%s|%d", days[i].dayName, days[i].nSubjects);
+    for (int j = 0; j < days[i].nSubjects; ++j) {
+      fprintf(file, "|%s", days[i].subjects[j]);
+    }
+    fprintf(file, "\n");
+  }
+
+  fclose(file);
+}
+
+Task *deserializeTasks(const char *filename, size_t *size) {
   char filePath[256];
   if (filename[0] == '~') {
     const char *homeDir = getenv("HOME");
