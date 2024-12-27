@@ -193,10 +193,11 @@ Day *deserializeSchedule(const char *filename, size_t *size) {
       day.nSubjects = atoi(token);
 
     for (int i = 0; i < day.nSubjects; i++) {
-      token = strtok(NULL, "|");
+      token = strtok(NULL, "|\n");
       if (token) {
         day.subjects[i] = malloc(strlen(token) + 1);
-        strncpy(day.subjects[i], token, 14);
+        strncpy(day.subjects[i], token, strlen(token));
+        day.subjects[i][strlen(token)] = '\0';
       }
     }
 
