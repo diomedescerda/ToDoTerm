@@ -5,6 +5,28 @@
 #include <string.h>
 #include <time.h>
 
+void serializeSchedule(const char *filename);
+Day *deserializeSchedule(const char *filename, size_t *size);
+
+void initSchedule();
+void printSchedule();
+void printScheduleSys();
+void addSubject();
+void removeSubject();
+
+void scheduleMain() {
+  size_t size;
+  if (!(schedule =
+            deserializeSchedule("~/.config/ToDoTerm/schedule.dat", &size))) {
+    initSchedule();
+  }
+
+  // addSubject();
+  //  removeSubject();
+  serializeSchedule("~/.config/ToDoTerm/schedule.dat");
+  printScheduleSys();
+}
+
 void initSchedule() {
   const char *dayNames[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
                             "Thursday", "Friday", "Saturday"};
@@ -33,6 +55,24 @@ void printSchedule() {
       end = d;
     }
   }
+}
+
+void printScheduleSys() {
+  printf("--prueba--\n");
+  printf(
+      "┌───────────────────────────────────────────────────────────────┐ \n");
+  printf(
+      "│                 Schedule in your Terminal!                    │ \n");
+  printf(
+      "└───────────────────────────────────────────────────────────────┘ \n\n");
+  printSchedule();
+  printf("\n┌──────────────────────────────────────────────────────"
+         "──────────────┐ \n");
+  printf(
+      "│ [ (A)dd Subject ] [ (R)emove Subject ] [ (E)xit ]                  │"
+      "\n");
+  printf("└────────────────────────────────────────────────────────"
+         "────────────┘ \n\n>> ");
 }
 
 void addSubject() {

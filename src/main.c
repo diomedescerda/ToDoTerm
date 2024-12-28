@@ -90,16 +90,7 @@ int main(int argc, char *argv[]) {
   } else if (argc == 2) {
 
     if (strcmp(argv[1], "schedule") == 0) {
-      size_t size;
-      if (!(schedule = deserializeSchedule("~/.config/ToDoTerm/schedule.dat",
-                                           &size))) {
-        initSchedule();
-      }
-      addSubject();
-      //  wednesday bugggg ???
-      serializeSchedule("~/.config/ToDoTerm/schedule.dat");
-      printSchedule();
-      //    removeSubject();
+      scheduleMain();
     } else if (strcmp(argv[1], "deadline") == 0) {
       printf("deadline");
     } else {
