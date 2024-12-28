@@ -84,9 +84,9 @@ void serializeSchedule(const char *filename) {
   }
 
   for (int i = 0; i < NUM_DAYS; ++i) {
-    fprintf(file, "%s|%d", days[i].dayName, days[i].nSubjects);
-    for (int j = 0; j < days[i].nSubjects; ++j) {
-      fprintf(file, "|%s", days[i].subjects[j]);
+    fprintf(file, "%s|%d", schedule[i].dayName, schedule[i].nSubjects);
+    for (int j = 0; j < schedule[i].nSubjects; ++j) {
+      fprintf(file, "|%s", schedule[i].subjects[j]);
     }
     fprintf(file, "\n");
   }

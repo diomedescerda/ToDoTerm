@@ -12,6 +12,8 @@ int taskCount = 0;
 char msg[256] = "n";
 struct passwd *pw;
 
+Day *schedule;
+
 int main(int argc, char *argv[]) {
   if (argc == 1) {
     uid_t uid;
@@ -89,13 +91,14 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "schedule") == 0) {
       size_t size;
-      Day *schedule;
-      schedule = deserializeSchedule("~/.config/ToDoTerm/schedule.dat", &size);
-      printSchedule(schedule);
-      //      addSubject();
-      //      addSubject();
-      //      serializeSchedule("~/.config/ToDoTerm/schedule.dat");
-      // removeSubject();
+      if (!(schedule = deserializeSchedule("~/.config/ToDoTerm/schedule.dat",
+                                           &size))) {
+        initSchedule();
+      }
+      // addSubject();
+      serializeSchedule("~/.config/ToDoTerm/schedule.dat");
+      printSchedule();
+      //    removeSubject();
     } else if (strcmp(argv[1], "deadline") == 0) {
       printf("deadline");
     } else {

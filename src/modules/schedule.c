@@ -5,17 +5,18 @@
 #include <string.h>
 #include <time.h>
 
-Day days[NUM_DAYS] = {
-    [0] = {.dayName = "Sunday", .nSubjects = 0},
-    [1] = {.dayName = "Monday", .nSubjects = 0},
-    [2] = {.dayName = "Tuesday", .nSubjects = 0},
-    [3] = {.dayName = "Wednesday", .nSubjects = 0},
-    [4] = {.dayName = "Thursday", .nSubjects = 0},
-    [5] = {.dayName = "Friday", .nSubjects = 0},
-    [6] = {.dayName = "Saturday", .nSubjects = 0},
-};
+void initSchedule() {
+  const char *dayNames[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
+                            "Thursday", "Friday", "Saturday"};
+  schedule = malloc(NUM_DAYS * sizeof(Day));
 
-void printSchedule(Day *schedule) {
+  for (int i = 0; i < NUM_DAYS; i++) {
+    strcpy(schedule[i].dayName, dayNames[i]);
+    schedule[i].nSubjects = 0;
+  }
+}
+
+void printSchedule() {
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
   int d = tm.tm_wday;
@@ -53,10 +54,11 @@ void addSubject() {
   for (int i = 0; i < strlen(input); i++) {
     if (isdigit(input[i])) {
       day = input[i] - '0';
-      n = days[day].nSubjects;
-      days[day].subjects[n] = (char *)malloc((strlen(name) + 1) * sizeof(char));
-      strcpy(days[day].subjects[n], name);
-      days[day].nSubjects++;
+      n = schedule[day].nSubjects;
+      schedule[day].subjects[n] =
+          (char *)malloc((strlen(name) + 1) * sizeof(char));
+      strcpy(schedule[day].subjects[n], name);
+      schedule[day].nSubjects++;
       nDays++;
     }
   }
@@ -69,12 +71,12 @@ void removeSubject() {
   name[strlen(name) - 1] = 0;
 
   for (int i = 0; i < NUM_DAYS; i++) {
-    for (int j = 0; j < days[i].nSubjects; j++) {
-      if (strcmp(name, days[i].subjects[j]) == 0) {
-        for (int k = j; k < days[i].nSubjects; k++) {
-          days[i].subjects[k] = days[i].subjects[k + 1];
+    for (int j = 0; j < schedule[i].nSubjects; j++) {
+      if (strcmp(name, schedule[i].subjects[j]) == 0) {
+        for (int k = j; k < schedule[i].nSubjects; k++) {
+          schedule[i].subjects[k] = schedule[i].subjects[k + 1];
         }
-        days[i].nSubjects--;
+        schedule[i].nSubjects--;
       }
     }
   }

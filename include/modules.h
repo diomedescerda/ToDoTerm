@@ -27,7 +27,7 @@ extern char msg[256];
 extern struct passwd *pw;
 extern int taskMode;
 
-extern Day days[NUM_DAYS];
+extern Day *schedule;
 
 #define RED "\x1b[31m"
 #define YELLOW "\x1b[33m"
@@ -65,7 +65,8 @@ void serializeSchedule(const char *filename);
 Task *deserializeTasks(const char *filename, size_t *size);
 Day *deserializeSchedule(const char *filename, size_t *size);
 
-void printSchedule(Day *schedule);
+void initSchedule();
+void printSchedule();
 void addSubject();
 void removeSubject();
 #endif
