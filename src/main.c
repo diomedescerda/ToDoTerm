@@ -95,7 +95,8 @@ int main(int argc, char *argv[]) {
                                            &size))) {
         initSchedule();
       }
-      // addSubject();
+      addSubject();
+      //  wednesday bugggg ???
       serializeSchedule("~/.config/ToDoTerm/schedule.dat");
       printSchedule();
       //    removeSubject();

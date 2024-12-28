@@ -186,7 +186,7 @@ Day *deserializeSchedule(const char *filename, size_t *size) {
     Day day;
     char *token = strtok(line, "|");
     if (token)
-      strncpy(day.dayName, token, 9);
+      strncpy(day.dayName, token, 10);
 
     token = strtok(NULL, "|");
     if (token)

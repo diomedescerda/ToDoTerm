@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
   char dayName[10];
-  char *subjects[15];
+  char *subjects[25];
   int nSubjects;
 } Day;
 
