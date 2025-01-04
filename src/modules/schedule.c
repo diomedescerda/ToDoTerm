@@ -58,7 +58,6 @@ void printSchedule() {
 }
 
 void printScheduleSys() {
-  printf("--prueba--\n");
   printf(
       "┌───────────────────────────────────────────────────────────────┐ \n");
   printf(
